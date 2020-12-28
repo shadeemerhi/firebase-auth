@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 import { useAuth } from '../components/contexts/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 export default function SignUp() {
   const emailRef = useRef();
@@ -16,20 +17,39 @@ export default function SignUp() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    setLoading(true);
+
     if(passwordRef.current.value !== passwordConfirmRef.current.value) {
+      setLoading(false);
       return setError('Passwords do not match');
     }
 
-    try {
-      setError('');
-      setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
+
+    signup(emailRef.current.value, passwordRef.current.value)
+    .then((response) => {
+      console.log(response.user);
+      return axios.post('/api/users', {
+        user: response.user
+      }).then(() => {
+        setLoading(false);
+        history.push('/');
+      })
+    .catch(() => {
       setLoading(false);
-      history.push('/');
-    } catch {
-      setError('Failed to create an account');
-      setLoading(false);
-    }
+      setError('Failed to create and account');
+    })});
+
+
+    // try {
+    //   setError('');
+    //   setLoading(true);
+    //   await signup(emailRef.current.value, passwordRef.current.value);
+    //   setLoading(false);
+    //   history.push('/');
+    // } catch {
+    //   setError('Failed to create an account');
+    //   setLoading(false);
+    // }
   }
 
   return (

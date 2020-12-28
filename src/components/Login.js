@@ -15,6 +15,21 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
+
+    // NOT SURE WHY BELOW DOESN'T WORK BUT TRY CATCH BLOCK DOES
+
+    // login(emailRef.current.value, passwordRef.current.value)
+    // .then(() => {
+    //   console.log('etffff');
+    //   history.push('/');
+    // })
+    // .catch(() => {
+    //   setError('Failed to log in');
+    // })
+    // .finally(() => {
+    //   setLoading(false);
+    // })
 
     try {
       setError('');
